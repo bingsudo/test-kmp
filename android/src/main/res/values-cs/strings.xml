@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Oprava trhaného videa</string>
+    <string name="notif_title">Opravuji videa…</string>
+    <string name="notif_channel">Zpracování videa</string>
+    <string name="notif_done_channel">Vše hotovo</string>
+    <string name="all_done">Vše hotovo</string>
+</resources>

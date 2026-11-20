@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Akadozó videók javítása</string>
+    <string name="notif_title">Videók javítása…</string>
+    <string name="notif_channel">Videófeldolgozás</string>
+    <string name="notif_done_channel">Minden kész</string>
+    <string name="all_done">Minden kész</string>
+</resources>

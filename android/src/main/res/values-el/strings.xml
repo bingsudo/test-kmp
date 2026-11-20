@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Διόρθωση βίντεο με κολλήματα</string>
+    <string name="notif_title">Διόρθωση βίντεο…</string>
+    <string name="notif_channel">Επεξεργασία βίντεο</string>
+    <string name="notif_done_channel">Ολοκληρώθηκαν όλα</string>
+    <string name="all_done">Ολοκληρώθηκαν όλα</string>
+</resources>

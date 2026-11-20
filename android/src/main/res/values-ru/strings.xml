@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Исправление лагающего видео</string>
+    <string name="notif_title">Исправление видео…</string>
+    <string name="notif_channel">Обработка видео</string>
+    <string name="notif_done_channel">Всё готово</string>
+    <string name="all_done">Всё готово</string>
+</resources>

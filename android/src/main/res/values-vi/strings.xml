@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sửa video bị giật</string>
+    <string name="notif_title">Đang sửa video…</string>
+    <string name="notif_channel">Xử lý video</string>
+    <string name="notif_done_channel">Hoàn tất tất cả</string>
+    <string name="all_done">Hoàn tất tất cả</string>
+</resources>

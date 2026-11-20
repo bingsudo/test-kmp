@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fixa hackiga videor</string>
+    <string name="notif_title">Fixar videor…</string>
+    <string name="notif_channel">Videobearbetning</string>
+    <string name="notif_done_channel">Allt klart</string>
+    <string name="all_done">Allt klart</string>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">เครื่องมือแก้วิดีโอกระตุก</string>
+    <string name="notif_title">กำลังแก้วิดีโอ…</string>
+    <string name="notif_channel">การประมวลผลวิดีโอ</string>
+    <string name="notif_done_channel">เสร็จทั้งหมด</string>
+    <string name="all_done">เสร็จทั้งหมด</string>
+</resources>

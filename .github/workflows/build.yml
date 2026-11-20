@@ -1,0 +1,171 @@
+name: release
+on:
+  push:
+    tags: ["v*"]        # pushing a tag such as v1.0.0 publishes a Release; the version comes from the tag
+  workflow_dispatch:     # manual run: build and test only, no Release
+
+env:
+  APP: KmpTest
+
+jobs:
+  # source, comments and docs are English only; translations live in the locale files
+  english-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: No CJK text outside the translation files
+        run: |
+          if git grep -nIP '[\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}]' -- . ':!**/composeResources/files/locales/**' ':!**/src/main/res/values-*/**'; then
+            echo "Found the lines above; move user-facing text into the locale files and write code and docs in English."
+            exit 1
+          fi
+
+
+  # Kotlin Multiplatform desktop app (Compose Desktop + JavaCV); each OS builds its own package
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: windows-latest, osname: windows }
+          - { os: ubuntu-latest,  osname: linux }
+          - { os: macos-latest,   osname: macos }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Version from the tag
+        id: v
+        shell: bash
+        run: |
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            ver="${GITHUB_REF_NAME#v}"
+            [[ "$ver" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "tag must look like v1.2.3, got $GITHUB_REF_NAME"; exit 1; }
+            label="$ver"
+          else
+            ver="1.0.0"; label="dev"
+          fi
+          echo "ver=$ver" >> "$GITHUB_OUTPUT"
+          echo "label=$label" >> "$GITHUB_OUTPUT"
+      - name: Unit tests (every module, real encode/decode with this OS's engines)
+        run: ./gradlew :shared:domain:desktopTest :shared:data:desktopTest :shared:ui:desktopTest :desktop:test
+        shell: bash
+      - run: ./gradlew -Papp.version=${{ steps.v.outputs.ver }} :desktop:packageReleaseDistributionForCurrentOS :desktop:createDistributable
+        shell: bash
+      - name: Single-file portable exe (Windows)
+        if: runner.os == 'Windows'
+        run: ./gradlew -Papp.version=${{ steps.v.outputs.ver }} :desktop:packageSingleExe
+        shell: bash
+      - name: Collect (installer + portable), named APP-version-os-arch
+        shell: bash
+        run: |
+          mkdir out
+          arch=$(echo "$RUNNER_ARCH" | tr '[:upper:]' '[:lower:]')
+          base="$APP-${{ steps.v.outputs.label }}-${{ matrix.osname }}-$arch"
+          for f in desktop/build/compose/binaries/main-release/*/*; do [ -f "$f" ] && cp "$f" "out/$base.${f##*.}"; done
+          app=desktop/build/compose/binaries/main/app
+          case "$RUNNER_OS" in
+            Windows) cp desktop/build/compose/binaries/main/single/$APP.exe "out/$base-portable.exe" ;;
+            macOS)   ditto -c -k --keepParent "$app"/*.app "out/$base-portable.zip" ;;
+            Linux)   tar czf "out/$base-portable.tar.gz" -C "$app" . ;;
+          esac
+          ls -la out
+      - name: Test the portable build (CLI on a synthetic clip, every available engine; on Windows the single exe)
+        shell: bash
+        run: |
+          py=python; command -v python >/dev/null || py=python3
+          $py -m pip install --quiet opencv-python-headless numpy
+          mkdir ci-in
+          $py scripts/make_test_clip.py ci-in/clip.mp4
+          app=desktop/build/compose/binaries/main/app
+          case "$RUNNER_OS" in
+            Windows) bin=$(ls out/*-portable.exe) ;;
+            macOS)   bin=$(ls "$app"/*.app/Contents/MacOS/* | head -1) ;;
+            Linux)   bin=$(ls "$app"/*/bin/* | head -1) ;;
+          esac
+          echo "launching: $bin"
+          if [ "$RUNNER_OS" = "Linux" ]; then run="xvfb-run -a"; else run=""; fi
+          $run "$bin" --cli --report=report.txt ci-in && code=0 || code=$?
+          cat report.txt
+          [ "$code" = "0" ] || { echo "CLI exit code $code"; exit 1; }
+          grep -q " unique," report.txt
+          ! grep -q "^FAILED" report.txt
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-reports-${{ matrix.osname }}
+          path: "**/build/reports/tests/"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ matrix.osname }}
+          path: out/*
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Version from the tag
+        id: v
+        run: |
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            ver="${GITHUB_REF_NAME#v}"
+            [[ "$ver" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "tag must look like v1.2.3, got $GITHUB_REF_NAME"; exit 1; }
+            label="$ver"
+          else
+            ver="1.0.0"; label="dev"
+          fi
+          echo "ver=$ver" >> "$GITHUB_OUTPUT"
+          echo "label=$label" >> "$GITHUB_OUTPUT"
+      - name: Build (signed release APK when the signing secrets exist)
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          mkdir out
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.jks"
+            export ANDROID_KEYSTORE_FILE="$RUNNER_TEMP/release.jks"
+            ./gradlew -Papp.version=${{ steps.v.outputs.ver }} :android:assembleRelease
+            signer="$ANDROID_HOME"/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)/apksigner
+            # one APK per CPU type: arm64 for phones, x86_64 for emulators and x86 devices
+            for abi in arm64-v8a x86_64; do
+              apk=android/build/outputs/apk/release/android-$abi-release.apk
+              "$signer" verify --print-certs "$apk" | head -3
+              cp "$apk" "out/$APP-${{ steps.v.outputs.label }}-android-${abi%-v8a}.apk"
+            done
+          elif [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            echo "A release needs the signing secrets (ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD)."
+            exit 1
+          else
+            ./gradlew -Papp.version=${{ steps.v.outputs.ver }} :android:assembleDebug
+            for abi in arm64-v8a x86_64; do
+              cp android/build/outputs/apk/debug/android-$abi-debug.apk "out/$APP-dev-android-${abi%-v8a}-debug.apk"
+            done
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: out/*
+
+  release:
+    needs: [english-only, desktop, android]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: out/*
+          generate_release_notes: true

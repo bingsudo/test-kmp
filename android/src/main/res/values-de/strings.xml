@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ruckel-Video-Korrektur</string>
+    <string name="notif_title">Videos werden korrigiert…</string>
+    <string name="notif_channel">Videoverarbeitung</string>
+    <string name="notif_done_channel">Alles erledigt</string>
+    <string name="all_done">Alles erledigt</string>
+</resources>

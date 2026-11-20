@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Correcteur de vidéo saccadée</string>
+    <string name="notif_title">Correction des vidéos…</string>
+    <string name="notif_channel">Traitement vidéo</string>
+    <string name="notif_done_channel">Tout est terminé</string>
+    <string name="all_done">Tout est terminé</string>
+</resources>

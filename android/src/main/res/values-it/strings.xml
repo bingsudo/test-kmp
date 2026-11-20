@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Correttore video a scatti</string>
+    <string name="notif_title">Correzione dei video…</string>
+    <string name="notif_channel">Elaborazione video</string>
+    <string name="notif_done_channel">Tutto completato</string>
+    <string name="all_done">Tutto completato</string>
+</resources>

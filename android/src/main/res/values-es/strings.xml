@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Corrector de vídeo con lag</string>
+    <string name="notif_title">Corrigiendo vídeos…</string>
+    <string name="notif_channel">Procesamiento de vídeo</string>
+    <string name="notif_done_channel">Todo listo</string>
+    <string name="all_done">Todo listo</string>
+</resources>

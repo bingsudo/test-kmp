@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Corector pentru video sacadat</string>
+    <string name="notif_title">Se repară videoclipurile…</string>
+    <string name="notif_channel">Procesare video</string>
+    <string name="notif_done_channel">Totul este gata</string>
+    <string name="all_done">Totul este gata</string>
+</resources>

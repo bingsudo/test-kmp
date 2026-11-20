@@ -1,0 +1,33 @@
+# build output and IDE state
+.gradle/
+.kotlin/
+build/
+dist/
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+
+# machine-specific (Android SDK path)
+local.properties
+
+# signing keys and passwords: never commit, keep your own backup
+*.jks
+*.keystore
+*.p12
+keystore.properties
+signing.properties
+.env
+.env.*
+
+# test videos (often private camera footage)
+*.mp4
+*.mov
+*.mkv
+*.avi
+
+# leftovers of the old Python tool
+.venv/
+__pycache__/

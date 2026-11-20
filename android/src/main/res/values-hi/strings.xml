@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">अटकते वीडियो का सुधारक</string>
+    <string name="notif_title">वीडियो सुधारे जा रहे हैं…</string>
+    <string name="notif_channel">वीडियो प्रोसेसिंग</string>
+    <string name="notif_done_channel">सब पूरा हुआ</string>
+    <string name="all_done">सब पूरा हुआ</string>
+</resources>

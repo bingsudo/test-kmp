@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Lag 影片修正工具</string>
+    <string name="notif_title">正在修正影片…</string>
+    <string name="notif_channel">影片處理</string>
+    <string name="notif_done_channel">全部完成</string>
+    <string name="all_done">全部完成</string>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Perbaikan Video Lag</string>
+    <string name="notif_title">Memperbaiki video…</string>
+    <string name="notif_channel">Pemrosesan video</string>
+    <string name="notif_done_channel">Semua selesai</string>
+    <string name="all_done">Semua selesai</string>
+</resources>

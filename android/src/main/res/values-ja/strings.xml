@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ラグ動画補正ツール</string>
+    <string name="notif_title">動画を補正しています…</string>
+    <string name="notif_channel">動画の処理</string>
+    <string name="notif_done_channel">すべて完了</string>
+    <string name="all_done">すべて完了</string>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Haperende-videocorrectie</string>
+    <string name="notif_title">Video’s worden gecorrigeerd…</string>
+    <string name="notif_channel">Videoverwerking</string>
+    <string name="notif_done_channel">Alles klaar</string>
+    <string name="all_done">Alles klaar</string>
+</resources>

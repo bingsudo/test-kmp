@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Korekta zacinającego się wideo</string>
+    <string name="notif_title">Poprawianie filmów…</string>
+    <string name="notif_channel">Przetwarzanie wideo</string>
+    <string name="notif_done_channel">Wszystko gotowe</string>
+    <string name="all_done">Wszystko gotowe</string>
+</resources>

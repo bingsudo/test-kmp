@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">랙 영상 보정 도구</string>
+    <string name="notif_title">동영상 보정 중…</string>
+    <string name="notif_channel">동영상 처리</string>
+    <string name="notif_done_channel">모두 완료</string>
+    <string name="all_done">모두 완료</string>
+</resources>
